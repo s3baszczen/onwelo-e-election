@@ -1,0 +1,42 @@
+package com.onwelo.election.voting.domain.model;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Objects;
+import java.util.UUID;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "externalUserId")
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "external_user_id"))
+public class Voter {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false)
+    private UUID externalUserId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VoterStatus status;
+
+    public Voter(UUID externalUserId, VoterStatus status) {
+        this.externalUserId = Objects.requireNonNull(externalUserId, "externalUserId cannot be null");
+        this.status = Objects.requireNonNull(status, "status cannot be null");
+    }
+
+    public void block() {
+        this.status = VoterStatus.BLOCKED;
+    }
+
+    public void activate() {
+        this.status = VoterStatus.ACTIVE;
+    }
+}

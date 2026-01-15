@@ -1,0 +1,5 @@
+spring:
+  name: e-election
+  jpa:
+    hibernate:
+      ddl-auto: validate

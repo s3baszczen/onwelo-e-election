@@ -1,4 +1,4 @@
-package com.onwelo.election.voter.interfaces.constraints;
+package com.onwelo.election.voting.interfaces.constraints;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
