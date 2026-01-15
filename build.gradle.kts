@@ -14,12 +14,22 @@ java {
     }
 }
 
+val lombokVersion = "1.18.42"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    //implementation
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    //compileOnly
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+
+    //annotationProcessor
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
     //testImplementation
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
@@ -27,6 +37,12 @@ dependencies {
 
     //testRuntimeOnly
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    //testCompileOnly
+    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+
+    //testAnnotationProcessor
+    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
 }
 
 tasks.withType<Test> {
