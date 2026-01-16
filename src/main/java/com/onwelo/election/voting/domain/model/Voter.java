@@ -1,8 +1,8 @@
 package com.onwelo.election.voting.domain.model;
 
+import com.onwelo.election.voting.domain.VoterBlockedException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = "externalUserId")
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "external_user_id"))
 public class Voter {
@@ -38,6 +37,13 @@ public class Voter {
 
     public void activate() {
         this.status = VoterStatus.ACTIVE;
+    }
+
+    public Vote vote(UUID electionId, UUID candidateId) {
+        if (this.status == VoterStatus.BLOCKED) {
+            throw new VoterBlockedException(this.id);
+        }
+        return new Vote(this.id, electionId, candidateId);
     }
 
     @Override

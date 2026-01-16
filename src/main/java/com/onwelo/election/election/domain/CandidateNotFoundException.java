@@ -1,4 +1,4 @@
-package com.onwelo.election.voting.domain;
+package com.onwelo.election.election.domain;
 
 import java.util.UUID;
 

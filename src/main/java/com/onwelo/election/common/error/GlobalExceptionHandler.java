@@ -1,7 +1,11 @@
 package com.onwelo.election.common.error;
 
+import com.onwelo.election.election.domain.CandidateNotFoundException;
 import com.onwelo.election.election.domain.ElectionNotFoundException;
-import com.onwelo.election.voting.domain.*;
+import com.onwelo.election.voting.domain.AlreadyVotedException;
+import com.onwelo.election.voting.domain.VoterAlreadyExistsException;
+import com.onwelo.election.voting.domain.VoterBlockedException;
+import com.onwelo.election.voting.domain.VoterNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -42,10 +46,7 @@ public class GlobalExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    @ExceptionHandler({
-            VoterBlockedException.class,
-            CandidateNotInElectionException.class
-    })
+    @ExceptionHandler(VoterBlockedException.class)
     public ProblemDetail handleBadRequestException(RuntimeException ex) {
         log.warn("Bad request: {}", ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());

@@ -1,5 +1,6 @@
 package com.onwelo.election.election.domain.model;
 
+import com.onwelo.election.election.domain.CandidateNotFoundException;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -101,5 +102,13 @@ public class Election {
 
     public Set<Candidate> getCandidates() {
         return Collections.unmodifiableSet(candidates);
+    }
+
+    public Candidate findCandidateById(UUID candidateId) {
+        Objects.requireNonNull(candidateId, "Candidate ID cannot be null");
+        return candidates.stream()
+                .filter(c -> c.getId().equals(candidateId))
+                .findFirst()
+                .orElseThrow(() -> new CandidateNotFoundException(candidateId));
     }
 }
