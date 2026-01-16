@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "candidate")
 public class Candidate {
@@ -36,6 +35,23 @@ public class Candidate {
 
     void setElection(Election election) {
         this.election = election;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Candidate candidate = (Candidate) o;
+        if (id != null && candidate.id != null) {
+            return Objects.equals(id, candidate.id);
+        }
+        return Objects.equals(name, candidate.name) &&
+               Objects.equals(election, candidate.election);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
 

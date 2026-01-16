@@ -13,7 +13,7 @@ import java.util.*;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "election", uniqueConstraints = {
-    @UniqueConstraint(name = "election_name", columnNames = "name")
+    @UniqueConstraint(name = "election_name", columnNames = "value")
 })
 public class Election {
 
