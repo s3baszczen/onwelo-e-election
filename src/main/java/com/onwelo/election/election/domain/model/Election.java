@@ -31,7 +31,7 @@ public class Election {
     private LocalDateTime startsAt;
     private LocalDateTime endsAt;
 
-    @OneToMany(mappedBy = "election", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "election", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Candidate> candidates = new HashSet<>();
 
     public Election(ElectionName name, Set<Candidate> candidates) {

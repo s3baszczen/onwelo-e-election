@@ -36,7 +36,7 @@ public class VoterService {
         } else {
             voter.activate();
         }
-        return voterRepository.save(voter);
+        return voter;
     }
 
     public Voter getVoter(UUID voterId) {

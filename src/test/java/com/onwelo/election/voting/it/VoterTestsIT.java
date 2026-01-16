@@ -66,7 +66,13 @@ public class VoterTestsIT {
 
     private void itShouldRegisterANewVoter(ResponseSpec responseSpec) {
         responseSpec
-                .expectStatus().isCreated();
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").value(id -> {
+                    assertThat(id).isNotNull();
+                    Voter voter = voterRepository.findById(UUID.fromString(id.toString())).orElse(null);
+                    assertThat(voter).isNotNull();
+                });
     }
 
 }

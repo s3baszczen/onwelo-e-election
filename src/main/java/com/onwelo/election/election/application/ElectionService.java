@@ -29,14 +29,13 @@ public class ElectionService {
 
     @Transactional
     public Election updateElectionCandidates(UUID electionId, Set<Candidate> newCandidates) {
-        Election election = electionRepository.findById(electionId)
+        Election election = electionRepository.findByIdWithCandidates(electionId)
                 .orElseThrow(() -> new ElectionNotFoundException(electionId));
 
         election.updateCandidates(newCandidates);
-        return electionRepository.save(election);
+        return election;
     }
 
-    @Transactional(readOnly = true)
     public Election getElection(UUID electionId) {
         return electionRepository.findByIdWithCandidates(electionId)
                 .orElseThrow(() -> new ElectionNotFoundException(electionId));

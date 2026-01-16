@@ -14,6 +14,8 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import static com.onwelo.election.election.CandidateRequestBuilder.candidate;
 import static com.onwelo.election.election.RegisterElectionRequestBuilder.electionRequest;
 import static com.onwelo.election.election.UpdateElectionCandidatesRequestBuilder.updateCandidatesRequest;
@@ -41,9 +43,11 @@ public class ElectionTestsIT {
         );
 
         ResponseSpec responseSpec = electionApi.registerElection(electionRequest);
+        UUID electionId = extractElectionId(responseSpec);
 
         itShouldCreateElection(responseSpec);
         itShouldReturnElectionWithCorrectData(electionRequest, responseSpec);
+        itShouldPersistElectionInDatabase(electionId, electionRequest);
         itShouldBlockNextRegistrationWithSameName(electionRequest);
     }
 
@@ -61,6 +65,7 @@ public class ElectionTestsIT {
 
         itShouldReturnElection(responseSpec);
         itShouldReturnElectionWithCorrectData(electionRequest, responseSpec);
+        itShouldPersistElectionInDatabase(electionId, electionRequest);
     }
 
     @Test
@@ -81,6 +86,7 @@ public class ElectionTestsIT {
         ResponseSpec responseSpec = electionApi.updateElectionCandidates(electionId, updateRequest);
 
         itShouldReturnUpdatedCandidates(updateRequest, responseSpec);
+        itShouldPersistUpdatedCandidatesInDatabase(electionId, updateRequest);
     }
 
     private UUID extractElectionId(ResponseSpec responseSpec) {
@@ -139,6 +145,31 @@ public class ElectionTestsIT {
             responseSpec
                     .expectBody()
                     .jsonPath(String.format("$.candidates[?(@.name == '%s')]", candidate.name())).exists();
+        }
+    }
+
+    private void itShouldPersistElectionInDatabase(UUID electionId, RegisterElectionRequest electionRequest) {
+        var persistedElection = electionRepository.findByIdWithCandidates(electionId);
+
+        assertThat(persistedElection).isPresent();
+        assertThat(persistedElection.get().getName().getValue()).isEqualTo(electionRequest.name());
+        assertThat(persistedElection.get().getCandidates()).hasSize(electionRequest.candidates().size());
+
+        for (CandidateRequest candidate : electionRequest.candidates()) {
+            assertThat(persistedElection.get().getCandidates())
+                    .anyMatch(c -> c.getName().equals(candidate.name()));
+        }
+    }
+
+    private void itShouldPersistUpdatedCandidatesInDatabase(UUID electionId, UpdateElectionCandidatesRequest updateRequest) {
+        var persistedElection = electionRepository.findByIdWithCandidates(electionId);
+
+        assertThat(persistedElection).isPresent();
+        assertThat(persistedElection.get().getCandidates()).hasSize(updateRequest.candidates().size());
+
+        for (CandidateRequest candidate : updateRequest.candidates()) {
+            assertThat(persistedElection.get().getCandidates())
+                    .anyMatch(c -> c.getName().equals(candidate.name()));
         }
     }
 
