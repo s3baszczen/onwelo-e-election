@@ -39,4 +39,16 @@ public class Voter {
     public void activate() {
         this.status = VoterStatus.ACTIVE;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Voter voter = (Voter) o;
+        return Objects.equals(id, voter.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
