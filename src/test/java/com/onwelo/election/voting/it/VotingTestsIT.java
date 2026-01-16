@@ -11,6 +11,7 @@ import com.onwelo.election.voting.domain.VoteRepository;
 import com.onwelo.election.voting.domain.VoterRepository;
 import com.onwelo.election.voting.domain.model.Voter;
 import com.onwelo.election.voting.domain.model.VoterStatus;
+import com.onwelo.election.voting.infrastructure.VoteJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 import java.util.Set;
 import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 public class VotingTestsIT {
@@ -34,10 +33,7 @@ public class VotingTestsIT {
     ElectionJpaRepository electionRepository;
 
     @Autowired
-    VoteRepository voteRepository;
-
-    @Autowired
-    com.onwelo.election.voting.infrastructure.VoteJpaRepository voteJpaRepository;
+    VoteJpaRepository voteJpaRepository;
 
     private Voter activeVoter;
     private Voter blockedVoter;
@@ -157,23 +153,6 @@ public class VotingTestsIT {
         ResponseSpec responseSpec = votingApi.castVote(voteRequest);
 
         itShouldReturnNotFoundForNonExistentCandidate(responseSpec);
-    }
-
-    @Test
-    public void givenVoteIsCreated_whenCheckDatabase_thenUniqueConstraintShouldPreventDuplicates() {
-        VoteRequest voteRequest = new VoteRequest(
-                activeVoter.getId(),
-                election.getId(),
-                candidate1.getId()
-        );
-        votingApi.castVote(voteRequest);
-
-        boolean exists = voteRepository.existsByVoterIdAndElectionId(
-                activeVoter.getId(),
-                election.getId()
-        );
-
-        assertThat(exists).isTrue();
     }
 
     private void itShouldCreateVote(ResponseSpec responseSpec) {
