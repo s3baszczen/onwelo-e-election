@@ -1,6 +1,7 @@
 package com.onwelo.election.election.domain.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,6 +26,9 @@ public class Election {
 
     @Embedded
     private ElectionName name;
+
+    private LocalDateTime startsAt;
+    private LocalDateTime endsAt;
 
     @OneToMany(mappedBy = "election", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Candidate> candidates = new HashSet<>();

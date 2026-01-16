@@ -7,3 +7,5 @@
 - System nie zajmuje się uwierzytelnianiem.
 
 - Supiam się na logice i strukturze aplikacji.
+
+- Dla uproszczenia połączyłem encje JPA z encjami domenowymi

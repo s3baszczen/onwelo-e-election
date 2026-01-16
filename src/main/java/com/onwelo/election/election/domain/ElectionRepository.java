@@ -10,4 +10,6 @@ public interface ElectionRepository {
     Election save(Election election);
 
     Optional<Election> findById(UUID id);
+
+    Optional<Election> findByIdWithCandidates(UUID id);
 }

@@ -10,8 +10,7 @@ public class PostgresTestContainer implements ApplicationContextInitializer<Conf
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:17-alpine")
             .withDatabaseName("election_test")
             .withUsername("test")
-            .withPassword("test")
-            .withReuse(true);
+            .withPassword("test");
 
     static {
         postgreSQLContainer.start();

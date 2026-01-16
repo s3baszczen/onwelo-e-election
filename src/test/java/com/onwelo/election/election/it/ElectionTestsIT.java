@@ -2,10 +2,11 @@ package com.onwelo.election.election.it;
 
 import com.onwelo.election.common.it.IntegrationTest;
 import com.onwelo.election.election.ElectionApi;
-import com.onwelo.election.election.domain.ElectionRepository;
+import com.onwelo.election.election.infrastructure.ElectionJpaRepository;
 import com.onwelo.election.election.interfaces.CandidateRequest;
 import com.onwelo.election.election.interfaces.RegisterElectionRequest;
 import com.onwelo.election.election.interfaces.UpdateElectionCandidatesRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
@@ -24,7 +25,12 @@ public class ElectionTestsIT {
     ElectionApi electionApi;
 
     @Autowired
-    ElectionRepository electionRepository;
+    ElectionJpaRepository electionRepository;
+
+    @BeforeEach
+    void setUp() {
+        electionRepository.deleteAll();
+    }
 
     @Test
     public void givenUniqueElectionName_whenRegister_thenElectionShouldBeCreated() {

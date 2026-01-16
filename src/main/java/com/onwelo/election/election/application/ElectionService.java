@@ -38,7 +38,7 @@ public class ElectionService {
 
     @Transactional(readOnly = true)
     public Election getElection(UUID electionId) {
-        return electionRepository.findById(electionId)
+        return electionRepository.findByIdWithCandidates(electionId)
                 .orElseThrow(() -> new ElectionNotFoundException(electionId));
     }
 }
