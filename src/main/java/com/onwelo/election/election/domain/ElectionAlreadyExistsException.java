@@ -7,4 +7,8 @@ public class ElectionAlreadyExistsException extends BusinessException {
     public ElectionAlreadyExistsException(String electionName) {
         super(String.format("Election with name '%s' already exists", electionName));
     }
+
+    public ElectionAlreadyExistsException(String electionName, Throwable cause) {
+        super(String.format("Election with name '%s' already exists", electionName), cause);
+    }
 }

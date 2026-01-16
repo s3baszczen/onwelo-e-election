@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ProblemDetail handleBusinessException(BusinessException ex) {
-        log.warn("Business exception: {}", ex.getMessage());
+        log.warn("Business exception: {}", ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
@@ -29,15 +29,16 @@ public class GlobalExceptionHandler {
             CandidateNotFoundException.class
     })
     public ProblemDetail handleNotFoundException(RuntimeException ex) {
-        log.warn("Resource not found: {}", ex.getMessage());
+        log.warn("Resource not found: {}", ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler({
+            AlreadyVotedException.class,
             VoterAlreadyExistsException.class
     })
     public ProblemDetail handleConflictException(RuntimeException ex) {
-        log.warn("Conflict: {}", ex.getMessage());
+        log.warn("Conflict: {}", ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
@@ -46,13 +47,13 @@ public class GlobalExceptionHandler {
             CandidateNotInElectionException.class
     })
     public ProblemDetail handleBadRequestException(RuntimeException ex) {
-        log.warn("Bad request: {}", ex.getMessage());
+        log.warn("Bad request: {}", ex.getMessage(), ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
-        log.error("Validation failed: {}", ex.getMessage());
+        log.error("Validation failed: {}", ex.getMessage(), ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 HttpStatus.BAD_REQUEST,

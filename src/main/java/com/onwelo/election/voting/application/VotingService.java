@@ -8,6 +8,7 @@ import com.onwelo.election.voting.domain.model.Vote;
 import com.onwelo.election.voting.domain.model.Voter;
 import com.onwelo.election.voting.domain.model.VoterStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,6 @@ public class VotingService {
     private final VoteRepository voteRepository;
     private final ElectionService electionService;
 
-    @Transactional
     public Vote vote(UUID voterId, UUID electionId, UUID candidateId) {
         Voter voter = voterService.getVoter(voterId);
 
@@ -42,6 +42,10 @@ public class VotingService {
         }
 
         Vote vote = new Vote(voterId, electionId, candidateId);
-        return voteRepository.save(vote);
+        try {
+            return voteRepository.save(vote);
+        } catch (DataIntegrityViolationException e) {
+            throw new AlreadyVotedException(voterId, electionId, e);
+        }
     }
 }

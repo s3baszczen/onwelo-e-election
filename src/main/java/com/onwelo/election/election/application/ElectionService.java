@@ -23,7 +23,7 @@ public class ElectionService {
         try {
             return electionRepository.save(election);
         } catch (DataIntegrityViolationException e) {
-            throw new ElectionAlreadyExistsException(election.getName().getValue());
+            throw new ElectionAlreadyExistsException(election.getName().getValue(), e);
         }
     }
 

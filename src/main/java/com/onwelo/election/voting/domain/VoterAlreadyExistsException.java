@@ -14,4 +14,9 @@ public class VoterAlreadyExistsException extends BusinessException {
         this.externalUserId = externalUserId;
     }
 
+    public VoterAlreadyExistsException(UUID externalUserId, Throwable cause) {
+        super("Voter with externalUserId [" + externalUserId + "] already exists", cause);
+        this.externalUserId = externalUserId;
+    }
+
 }

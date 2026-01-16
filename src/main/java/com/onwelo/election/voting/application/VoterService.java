@@ -22,7 +22,7 @@ public class VoterService {
         try {
             return voterRepository.save(voter);
         } catch (DataIntegrityViolationException e) {
-            throw new VoterAlreadyExistsException(voter.getExternalUserId());
+            throw new VoterAlreadyExistsException(voter.getExternalUserId(), e);
         }
     }
 
