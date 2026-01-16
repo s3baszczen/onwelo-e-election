@@ -1,6 +1,7 @@
 package com.onwelo.election.common.error;
 
-import com.onwelo.election.voting.domain.VoterAlreadyExistsException;
+import com.onwelo.election.election.domain.ElectionNotFoundException;
+import com.onwelo.election.voting.domain.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -20,6 +21,33 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleBusinessException(BusinessException ex) {
         log.warn("Business exception: {}", ex.getMessage());
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler({
+            VoterNotFoundException.class,
+            ElectionNotFoundException.class,
+            CandidateNotFoundException.class
+    })
+    public ProblemDetail handleNotFoundException(RuntimeException ex) {
+        log.warn("Resource not found: {}", ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler({
+            VoterAlreadyExistsException.class
+    })
+    public ProblemDetail handleConflictException(RuntimeException ex) {
+        log.warn("Conflict: {}", ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler({
+            VoterBlockedException.class,
+            CandidateNotInElectionException.class
+    })
+    public ProblemDetail handleBadRequestException(RuntimeException ex) {
+        log.warn("Bad request: {}", ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

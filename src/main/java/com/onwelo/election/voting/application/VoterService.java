@@ -38,4 +38,9 @@ public class VoterService {
         }
         return voterRepository.save(voter);
     }
+
+    public Voter getVoter(UUID voterId) {
+        return voterRepository.findById(voterId)
+                .orElseThrow(() -> new VoterNotFoundException(voterId));
+    }
 }
