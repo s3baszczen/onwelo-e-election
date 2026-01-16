@@ -6,6 +6,8 @@
 
 - System nie zajmuje się uwierzytelnianiem.
 
-- Supiam się na logice i strukturze aplikacji.
+- Skupiam się na logice i strukturze aplikacji.
 
 - Dla uproszczenia połączyłem encje JPA z encjami domenowymi
+
+- Pomijam tworzenie schematu bazy danych np. w liquibase 
